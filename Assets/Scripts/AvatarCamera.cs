@@ -14,8 +14,11 @@ public class AvatarCamera : MonoBehaviour
     float TurnSpeed = 0.0f;
 
 
-	// Use this for initialization
-	void Start ()
+    /// <summary>
+    /// Initialization of Controller, and other pertinent things I'm sure. 
+    /// Actually this is just a small code change to test out updating of GIT changes and commits. 
+    /// </summary>
+    void Start ()
     {
         // Init Controller..
         TargetController = TargetObj.GetComponent<AvatarController>();
