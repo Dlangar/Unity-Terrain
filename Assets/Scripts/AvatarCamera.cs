@@ -20,6 +20,12 @@ public class AvatarCamera : MonoBehaviour
     /// </summary>
     void Start ()
     {
+
+	}
+
+    public void AttachAvatar(GameObject avatarObj)
+    {
+        TargetObj = avatarObj.transform;
         // Init Controller..
         TargetController = TargetObj.GetComponent<AvatarController>();
         if (TargetController == null)
@@ -27,17 +33,20 @@ public class AvatarCamera : MonoBehaviour
             Debug.LogError("Target Object does not contain an avatar controller.");
             return;
         }
-	}
-	
-	// Update is called once per frame
+    }
+
+    // Update is called once per frame
     /// <summary>
     /// This happens after Update & FixedUdates, so we update our position here, to make sure we're using the most recent information
     /// for the controller, based on this frame
     /// </summary>
-	void LateUpdate ()
+    void LateUpdate ()
     {
-        MoveToTarget();
-        LookAtTarget();
+        if (TargetController != null)
+        {
+            MoveToTarget();
+            LookAtTarget();
+        }
 	}
 
     void MoveToTarget()

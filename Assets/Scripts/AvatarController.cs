@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
 // [RequireComponent(typeof(CapsuleCollider))]
 
-public class AvatarController: MonoBehaviour
+public class AvatarController: NetworkBehaviour
 {
     public float ForwardSpeed = 10.0f;
     public float TurnSpeed = 100;
@@ -25,6 +26,25 @@ public class AvatarController: MonoBehaviour
     // Input Amounts - Eventually these will come from a separate controller
     float forwardInput = 0.0f;
     float turnInput = 0.0f;
+
+    // Called after we've been spawned
+    public override void OnStartLocalPlayer()
+    {
+        Debug.Log("OnStartLocalPlayer called..");
+        base.OnStartLocalPlayer();
+
+        // If we're the local player, find the avatar camera, and attach it to us
+        if (isLocalPlayer)
+        {
+            AvatarCamera avatarCamera = GameObject.FindObjectOfType<AvatarCamera>();
+            if (avatarCamera == null)
+            {
+                Debug.LogError("Unable to locate Avatar Camera for local client..");
+                return;
+            }
+            avatarCamera.AttachAvatar(this.gameObject);
+        }
+    }
 
 
     /// <summary>
@@ -55,8 +75,11 @@ public class AvatarController: MonoBehaviour
     /// </summary>
     void Update ()
     {
-        GetInput();
-        DoTurn();
+        if (isLocalPlayer)
+        {
+            GetInput();
+            DoTurn();
+        }
 	}
 
     /// <summary>
@@ -64,7 +87,8 @@ public class AvatarController: MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        DoMovement();
+        if (isLocalPlayer)
+            DoMovement();
     }
 
     /// <summary>
